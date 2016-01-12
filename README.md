@@ -1,3 +1,5 @@
+[![](https://badge.imagelayers.io/junxy/docker-koel.svg)](https://imagelayers.io/?images=junxy/docker-koel:latest 'Get your own badge on imagelayers.io')
+
 # docker-koel - Alpine Linux, PHP-FPM, Nginx, NodeJS
 
 Issue: https://github.com/phanan/koel/issues/10
