@@ -1,7 +1,4 @@
 FROM alpine:edge
-MAINTAINER Etopian Inc. <contact@etopian.com>
-
-
 
 LABEL   devoply.type="site" \
         devoply.cms="koel" \
@@ -11,7 +8,6 @@ LABEL   devoply.type="site" \
         devoply.description="Koel music player." \
         devoply.name="Koel" \
         devoply.params="docker run -d --name {container_name} -e VIRTUAL_HOST={virtual_hosts} -v /data/sites/{domain_name}:/DATA etopian/docker-koel"
-
 
 RUN apk update \
     && apk add bash less vim nginx ca-certificates nodejs \
@@ -36,10 +32,7 @@ ENV TERM="xterm" \
     APP_DEBUG=false\
     AP_ENV=production
 
-
 VOLUME ["/DATA/music"]
-
-
 
 RUN sed -i 's/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/g' /etc/php/php.ini && \
     sed -i 's/nginx:x:100:101:Linux User,,,:\/var\/www\/localhost\/htdocs:\/sbin\/nologin/nginx:x:100:101:Linux User,,,:\/DATA:\/bin\/bash/g' /etc/passwd && \
@@ -50,18 +43,15 @@ ADD files/php-fpm.conf /etc/php/
 ADD files/run.sh /
 RUN chmod +x /run.sh && chown -R nginx:nginx /DATA
 
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer 
-
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer
 
 RUN su nginx -c "git clone https://github.com/phanan/koel /DATA/htdocs &&\
     cd /DATA/htdocs &&\
     npm install &&\
-    composer config github-oauth.github.com  2084a22e9bdb38f94d081ab6f2d5fd339b5292e8 &&\
     composer install"
 
 #clean up
 RUN apk del --purge git build-base python nodejs
-
 
 COPY files/.env /DATA/htdocs/.env
 
